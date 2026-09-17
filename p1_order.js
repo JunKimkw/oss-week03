@@ -41,7 +41,9 @@ sleep(10).then(() => console.log("F"));
 
 console.log("G");
 
-// prediction:
-// actual:
+// prediction: A D G C B F E
+// actual: A D G C F E B
 // why I was wrong (one line per miss):
-//
+// B: 밑에 F와 E가 출력되기전에 쓰는 sleep이 settimeOut보다 우선순위에 있는줄 알았다. 
+//    setTimeout도 sleep과 같은 기능을 하는 비동기 내장 함수인것을 알게되었다. 따라서
+//    B는 50ms로 아래 있는 30ms와 10ms보다 대기시간이 길기 때문에 마지막에 실행된다.
