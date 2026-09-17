@@ -20,7 +20,7 @@
 //   --offline : 네트워크를 쓰지 않고 그 파일을 읽어 P3 와 똑같이 출력. 파일이 없으면 Error: no cache for busan, 종료 코드 1
 //   자세한 것은 README P6.
 //
-// 커밋 메시지: p3: forecast cli  /  p6: cache and offline
+// 커밋 메시지: p3: forecast cli  /  p6: cache and offline  /  p7: chalk colors
 
 import fs from "node:fs/promises";
 import chalk from "chalk";
