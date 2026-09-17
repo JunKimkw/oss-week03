@@ -32,6 +32,7 @@
 // 커밋 메시지: p4: compare cities
 
 import { geocode, forecast } from "./p3_weather.js";
+import chalk from "chalk";
 
 const names = process.argv.slice(2);
 if (names.length === 0) {
@@ -40,7 +41,31 @@ if (names.length === 0) {
 }
 
 // TODO:
-//   1. names.map(async (name) => { ... })  — 이름마다 geocode → forecast, { city, max } 를 돌려주는 Promise
-//   2. const results = await Promise.allSettled(...)
-//   3. fulfilled / rejected 로 나눔
-//   4. max 내림차순 정렬 → `${i + 1}. ${city.padEnd(8)} ${max.toFixed(1)}` → 실패는 `✗ ${name}: ${message}`
+//1. names.map(async (name) => { ... })  — 이름마다 geocode → forecast, { city, max } 를 돌려주는 Promise
+const jobs = names.map(async (n) => {
+  const place = await geocode(n);
+  const fc = await forecast(place);
+  return { city: place.name, max: fc.days[0].max };
+});
+//2. const results = await Promise.allSettled(...)
+const results = await Promise.allSettled(jobs);
+
+//3. fulfilled / rejected 로 나눔
+const ok = results
+  .filter((r) => r.status === "fulfilled")
+  .map((r) => r.value)
+  .sort((a, b) => b.max - a.max);
+
+const failed = results
+  .map((r, i) => ({ r, name: names[i] }))       
+  .filter(({ r }) => r.status === "rejected");
+
+  //4. max 내림차순 정렬 → `${i + 1}. ${city.padEnd(8)} ${max.toFixed(1)}` → 실패는 `✗ ${name}: ${message}`
+ok.forEach((row, i) => {
+  const s = row.max.toFixed(1);
+  const max = row.max >= 30 ? chalk.red(s) : row.max < 10 ? chalk.blue(s) : s;  
+  console.log(`${i + 1}. ${chalk.bold(row.city.padEnd(8))} ${max}`);
+});
+for (const { r, name } of failed) {
+  console.log(`✗ ${name}: ${r.reason.message}`);
+}
