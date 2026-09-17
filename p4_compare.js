@@ -29,7 +29,7 @@
 // 확인
 //   시간이 진짜 줄었는지: time node p4_compare.js Seoul Busan Jeju 를 루프 안 await 버전과 비교해 보면 안다.
 //
-// 커밋 메시지: p4: compare cities
+// 커밋 메시지: p4: compare cities 
 
 import { geocode, forecast } from "./p3_weather.js";
 import chalk from "chalk";
